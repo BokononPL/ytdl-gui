@@ -28,7 +28,7 @@ namespace WpfApp1
 
 		private void DownloadButton_Click(object sender, RoutedEventArgs e)
 		{
-
+			DisableButtonFor(DownloadButton, 1000);
 			string link = AddressBox.Text;
 			string outputFolderOption = "";
 			if (PathBox.Text != "")
@@ -38,7 +38,6 @@ namespace WpfApp1
 			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } youtube-dl.exe ";
 			programArg += link + outputFolderOption;
 			var process = System.Diagnostics.Process.Start(Environment.ExpandEnvironmentVariables("%SystemRoot%") + @"\System32\cmd.exe", programArg);
-			process.WaitForExit();
 		}
 
 
@@ -64,14 +63,28 @@ namespace WpfApp1
 
 		private void ConvertButton_Click(object sender, RoutedEventArgs e)
 		{
+			DisableButtonFor(ConvertButton, 1000);
 			string outputFolderOption = "";
 			if (PathBox.Text != "")
 			{
-				outputFolderOption = $" -i \"{FileBox.Text}\" -f mp3 -q:a {AudioQualitySlider.Value} -filter:a \"volume=0.5\" \"{PathBox.Text}\\output.mp3\"";
+				outputFolderOption = $" -i \"{FileBox.Text}\" -f mp3 -q:a {AudioQualitySlider.Value} -filter:a \"volume={VolumeSlider.Value}\" \"{PathBox.Text}\\output.mp3\"";
 			}
 			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } ffmpeg.exe ";
 			programArg += outputFolderOption;
 			System.Diagnostics.Process.Start(Environment.ExpandEnvironmentVariables("%SystemRoot%") + @"\System32\cmd.exe", programArg);
+		}
+
+		private void DisableButtonFor(System.Windows.Controls.Button button, int ms) 
+		{
+			button.IsEnabled = false;
+			Task ButonDisabledTask = Task.Delay(1000);
+			ButonDisabledTask.ContinueWith(t =>
+			{
+				this.Dispatcher.Invoke(() =>
+				{
+					ConvertButton.IsEnabled = true;
+				});
+			});
 		}
 	}
 }

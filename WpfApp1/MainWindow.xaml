@@ -18,12 +18,15 @@
         <TextBlock x:Name="FileBox" HorizontalAlignment="Left" Margin="115,270,0,0" TextWrapping="Wrap" Text="No file selected" VerticalAlignment="Top" Width="430"/>
         <Button x:Name="BrowseFileButton" Content="Browse" HorizontalAlignment="Left" Margin="557,264,0,0" VerticalAlignment="Top" Width="75" Click="BrowseFileButton_Click"/>
         <Button x:Name="BrowseFolderButton" Content="Browse" HorizontalAlignment="Left" Margin="557,163,0,0" VerticalAlignment="Top" Width="75" Click="BrowseFolderButton_Click"/>
+        <Button x:Name="ConvertButton" Content="Convert" HorizontalAlignment="Left" Margin="557,388,0,0" VerticalAlignment="Top" Width="75" Click="ConvertButton_Click"/>
+        <CheckBox x:Name="KeepCmdOpen" Content="Keep cmd open" IsChecked="False" HorizontalAlignment="Left" Margin="315,51,0,0" VerticalAlignment="Top" Height="19" RenderTransformOrigin="0.548,1.29"/>
         <Slider x:Name="AudioQualitySlider" HorizontalAlignment="Left" Margin="166,302,0,0" VerticalAlignment="Top" Width="182" Maximum="9" Minimum="0"     IsSnapToTickEnabled="True"
             TickFrequency="1" Height="23" Value="4"/>
         <Label Content="Audio quality" HorizontalAlignment="Left" Margin="75,299,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.581,-0.075" Width="86"/>
-        <Button x:Name="ConvertButton" Content="Convert" HorizontalAlignment="Left" Margin="557,388,0,0" VerticalAlignment="Top" Width="75" Click="ConvertButton_Click"/>
-        <CheckBox x:Name="KeepCmdOpen" Content="Keep cmd open" IsChecked="False" HorizontalAlignment="Left" Margin="315,51,0,0" VerticalAlignment="Top" Height="19" RenderTransformOrigin="0.548,1.29"/>
         <TextBlock HorizontalAlignment="Left" Margin="353,304,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="0.493,-0.704" Text="{Binding ElementName=AudioQualitySlider, Path=Value}"/>
-
+        <Slider x:Name="VolumeSlider" HorizontalAlignment="Left" Margin="166,333,0,0" VerticalAlignment="Top" Width="182" Maximum="3.0" Minimum="0.1"     IsSnapToTickEnabled="True"
+            TickFrequency="0.1" Height="23" Value="1.0"/>
+        <Label Content="Volume" HorizontalAlignment="Left" Margin="75,330,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.581,-0.075" Width="86"/>
+        <TextBlock HorizontalAlignment="Left" Margin="353,335,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="0.493,-0.704" Text="{Binding ElementName=VolumeSlider, Path=Value}"/>
     </Grid>
 </Window>
