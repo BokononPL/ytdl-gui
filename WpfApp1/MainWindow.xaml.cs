@@ -38,7 +38,6 @@ namespace WpfApp1
 			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } youtube-dl.exe ";
 			programArg += link + outputFolderOption;
 			var process = System.Diagnostics.Process.Start(Environment.ExpandEnvironmentVariables("%SystemRoot%") + @"\System32\cmd.exe", programArg);
-			process.WaitForExit();
 		}
 
 
@@ -72,6 +71,12 @@ namespace WpfApp1
 			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } ffmpeg.exe ";
 			programArg += outputFolderOption;
 			System.Diagnostics.Process.Start(Environment.ExpandEnvironmentVariables("%SystemRoot%") + @"\System32\cmd.exe", programArg);
+		}
+
+		private void UpdateButton_Click(object sender, RoutedEventArgs e)
+		{
+			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } youtube-dl.exe -U";
+			var process = System.Diagnostics.Process.Start(Environment.ExpandEnvironmentVariables("%SystemRoot%") + @"\System32\cmd.exe", programArg);
 		}
 	}
 }

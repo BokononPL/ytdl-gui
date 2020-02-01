@@ -24,6 +24,7 @@
         <Button x:Name="ConvertButton" Content="Convert" HorizontalAlignment="Left" Margin="557,388,0,0" VerticalAlignment="Top" Width="75" Click="ConvertButton_Click"/>
         <CheckBox x:Name="KeepCmdOpen" Content="Keep cmd open" IsChecked="False" HorizontalAlignment="Left" Margin="315,51,0,0" VerticalAlignment="Top" Height="19" RenderTransformOrigin="0.548,1.29"/>
         <TextBlock HorizontalAlignment="Left" Margin="353,304,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="0.493,-0.704" Text="{Binding ElementName=AudioQualitySlider, Path=Value}"/>
+        <Button x:Name="UpdateButton" Content="Update" HorizontalAlignment="Left" Margin="557,48,0,0" VerticalAlignment="Top" Width="75" Click="UpdateButton_Click"/>
 
     </Grid>
 </Window>
