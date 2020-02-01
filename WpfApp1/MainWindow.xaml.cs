@@ -1,26 +1,18 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
 using System.Windows.Documents;
 using System.Windows.Forms;
-using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+using System.Diagnostics;
 
 namespace WpfApp1
 {
-	/// <summary>
-	/// Interaction logic for MainWindow.xaml
-	/// </summary>
-	public partial class MainWindow : Window
+    /// <summary>
+    /// Interaction logic for MainWindow.xaml
+    /// </summary>
+    public partial class MainWindow : Window
 	{
+        Process process;
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -33,14 +25,53 @@ namespace WpfApp1
 			string outputFolderOption = "";
 			if (PathBox.Text != "")
 			{
-				outputFolderOption = $"'{PathBox.Text}\\%(title)s.%(ext)s'";
+				outputFolderOption = $" -o \"{PathBox.Text}\\%(title)s.%(ext)s\"";
 			}
+			//SizeChanged = "ScrollViewer_SizeChanged"
 			string strCmdText;
 			strCmdText = link + outputFolderOption;
-			System.Diagnostics.Process.Start("youtube-dl.exe", strCmdText);
+            Console.WriteLine(strCmdText);
+            ProcessStartInfo cmdStartInfo = new ProcessStartInfo("youtube-dl.exe");
+            cmdStartInfo.CreateNoWindow = true;
+            cmdStartInfo.RedirectStandardOutput = true;
+            cmdStartInfo.RedirectStandardError = true;
+            cmdStartInfo.RedirectStandardInput = true;
+            cmdStartInfo.UseShellExecute = false;
+            cmdStartInfo.WindowStyle = ProcessWindowStyle.Hidden;
+            cmdStartInfo.Arguments = strCmdText;
+            
+            process = new Process();
+            process.StartInfo = cmdStartInfo;
+
+            if (process.Start() == true)
+            {
+                process.OutputDataReceived += new DataReceivedEventHandler(_cmd_OutputDataReceived);
+                process.ErrorDataReceived += new DataReceivedEventHandler(_cmd_ErrorDataReceived);
+                process.Exited += new EventHandler(_cmd_Exited);
+
+                process.BeginOutputReadLine();
+                process.BeginErrorReadLine();
+            }
+            else
+            {
+                process = null;
+            }
+            process.Start();
 		}
 
-		private void BrowseButton_Click(object sender, RoutedEventArgs e)
+        private void Window_Closed(object sender, EventArgs e)
+        {
+            if ((process != null) &&
+                (process.HasExited != true))
+            {
+                process.CancelErrorRead();
+                process.CancelOutputRead();
+                process.Close();
+                process.WaitForExit();
+            }
+        }
+
+        private void BrowseButton_Click(object sender, RoutedEventArgs e)
 		{
 /*			OpenFileDialog dialog = new OpenFileDialog();
 			dialog.InitialDirectory = "C:\\";
@@ -56,5 +87,69 @@ namespace WpfApp1
 			if (result.ToString() == "OK")
 				PathBox.Text = folderDialog.SelectedPath;
 		}
-	}
+
+        void _cmd_OutputDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            UpdateConsole(e.Data);
+        }
+
+        void _cmd_ErrorDataReceived(object sender, DataReceivedEventArgs e)
+        {
+            UpdateConsole(e.Data, Brushes.Red);
+        }
+
+        void _cmd_Exited(object sender, EventArgs e)
+        {
+            process.OutputDataReceived -= new DataReceivedEventHandler(_cmd_OutputDataReceived);
+            process.Exited -= new EventHandler(_cmd_Exited);
+        }
+
+        private void ScrollViewer_SizeChanged(object sender, SizeChangedEventArgs e)
+        {
+            outputViewer.ScrollToBottom();
+        }
+
+        private void UpdateConsole(string text)
+        {
+            UpdateConsole(text, null);
+        }
+
+        private void UpdateConsole(string text, Brush color)
+        {
+            if (!output.Dispatcher.CheckAccess())
+            {
+                output.Dispatcher.Invoke(
+                        new Action(
+                                () =>
+                                {
+                                    WriteLine(text, color);
+                                }
+                            )
+                    );
+            }
+            else
+            {
+                WriteLine(text, color);
+            }
+        }
+
+        private void WriteLine(string text, Brush color)
+        {
+            if (text != null)
+            {
+                Span line = new Span();
+                if (color != null)
+                {
+                    line.Foreground = color;
+                }
+                foreach (string textLine in text.Split(Environment.NewLine.ToCharArray(), StringSplitOptions.RemoveEmptyEntries))
+                {
+                    line.Inlines.Add(new Run(textLine));
+                }
+                line.Inlines.Add(new LineBreak());
+                output.Inlines.Add(line);
+                outputViewer.ScrollToBottom();
+            }
+        }
+    }
 }

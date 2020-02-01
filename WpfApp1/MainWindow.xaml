@@ -12,6 +12,8 @@
         <TextBlock HorizontalAlignment="Left" Margin="82,129,0,0" TextWrapping="Wrap" Text="Link" VerticalAlignment="Top" Height="22"/>
         <TextBlock x:Name="PathBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Margin="115,185,0,0" Width="430"/>
         <Button x:Name="BrowseButton" Content="Browse" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="557,179,0,0" Click="BrowseButton_Click"/>
-
+        <ScrollViewer Name="outputViewer" Margin="115,226,160,26" >
+            <TextBlock Name="output" />
+        </ScrollViewer>
     </Grid>
 </Window>
