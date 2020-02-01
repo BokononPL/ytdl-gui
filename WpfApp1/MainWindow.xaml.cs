@@ -29,10 +29,14 @@ namespace WpfApp1
 		private void DownloadButton_Click(object sender, RoutedEventArgs e)
 		{
 
-			String link = AddressBox.Text;
-
+			string link = AddressBox.Text;
+			string outputFolderOption = "";
+			if (PathBox.Text != "")
+			{
+				outputFolderOption = $"'{PathBox.Text}\\%(title)s.%(ext)s'";
+			}
 			string strCmdText;
-			strCmdText = link;
+			strCmdText = link + outputFolderOption;
 			System.Diagnostics.Process.Start("youtube-dl.exe", strCmdText);
 		}
 
