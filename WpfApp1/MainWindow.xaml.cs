@@ -37,7 +37,7 @@ namespace WpfApp1
 			}
 			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } youtube-dl.exe ";
 			programArg += link + outputFolderOption;
-			var process = System.Diagnostics.Process.Start("cmd.exe", programArg);
+			var process = System.Diagnostics.Process.Start(Environment.ExpandEnvironmentVariables("%SystemRoot%") + @"\System32\cmd.exe", programArg);
 			process.WaitForExit();
 		}
 
@@ -64,15 +64,14 @@ namespace WpfApp1
 
 		private void ConvertButton_Click(object sender, RoutedEventArgs e)
 		{
-			string link = AddressBox.Text;
 			string outputFolderOption = "";
 			if (PathBox.Text != "")
 			{
-				outputFolderOption = $" -i \"{PathBox.Text}\" -f mp3 -q:a 2 -filter:a \"volume=0.5\" \"{PathBox.Text}\\output.mp3\"";
+				outputFolderOption = $" -i \"{FileBox.Text}\" -f mp3 -q:a {AudioQualitySlider.Value} -filter:a \"volume=0.5\" \"{PathBox.Text}\\output.mp3\"";
 			}
-			string strCmdText;
-			strCmdText = link + outputFolderOption;
-			System.Diagnostics.Process.Start("ffmpeg.exe", strCmdText);
+			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } ffmpeg.exe ";
+			programArg += outputFolderOption;
+			System.Diagnostics.Process.Start(Environment.ExpandEnvironmentVariables("%SystemRoot%") + @"\System32\cmd.exe", programArg);
 		}
 	}
 }
