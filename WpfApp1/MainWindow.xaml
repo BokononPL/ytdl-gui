@@ -8,8 +8,10 @@
         Title="YTDL GUI" Height="450" Width="800">
     <Grid>
         <Button x:Name="DownloadButton" Content="Download" HorizontalAlignment="Left" Margin="557,129,0,0" VerticalAlignment="Top" Width="75" Click="DownloadButton_Click"/>
-        <TextBox x:Name="AddressBox" HorizontalAlignment="Left" Height="23" Margin="115,128,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="395"/>
+        <TextBox x:Name="AddressBox" HorizontalAlignment="Left" Height="23" Margin="115,128,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="430"/>
         <TextBlock HorizontalAlignment="Left" Margin="82,129,0,0" TextWrapping="Wrap" Text="Link" VerticalAlignment="Top" Height="22"/>
+        <TextBlock x:Name="PathBox" HorizontalAlignment="Left" TextWrapping="Wrap" Text="TextBlock" VerticalAlignment="Top" Margin="115,185,0,0" Width="430"/>
+        <Button x:Name="BrowseButton" Content="Browse" HorizontalAlignment="Left" VerticalAlignment="Top" Width="75" Margin="557,179,0,0" Click="BrowseButton_Click"/>
 
     </Grid>
 </Window>
