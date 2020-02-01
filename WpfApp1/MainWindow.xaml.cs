@@ -86,5 +86,11 @@ namespace WpfApp1
 				});
 			});
 		}
+
+		private void UpdateButton_Click(object sender, RoutedEventArgs e)
+		{
+			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } youtube-dl.exe -U";
+			var process = System.Diagnostics.Process.Start(Environment.ExpandEnvironmentVariables("%SystemRoot%") + @"\System32\cmd.exe", programArg);
+		}
 	}
 }
