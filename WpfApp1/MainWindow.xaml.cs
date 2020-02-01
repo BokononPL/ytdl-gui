@@ -40,15 +40,19 @@ namespace WpfApp1
 			System.Diagnostics.Process.Start("youtube-dl.exe", strCmdText);
 		}
 
-		private void BrowseButton_Click(object sender, RoutedEventArgs e)
+
+		private void BrowseFileButton_Click(object sender, RoutedEventArgs e)
 		{
-/*			OpenFileDialog dialog = new OpenFileDialog();
+			OpenFileDialog dialog = new OpenFileDialog();
 			dialog.InitialDirectory = "C:\\";
 
 			DialogResult result = dialog.ShowDialog();
 			if (result.ToString() == "OK")
-				PathBox.Text = dialog.FileName;*/
+				FileBox.Text = dialog.FileName;
+		}
 
+		private void BrowseFolderButton_Click_1(object sender, RoutedEventArgs e)
+		{
 			FolderBrowserDialog folderDialog = new FolderBrowserDialog();
 			folderDialog.SelectedPath = "C:\\";
 
