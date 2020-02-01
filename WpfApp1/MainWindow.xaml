@@ -17,7 +17,7 @@
         <TextBlock HorizontalAlignment="Left" Margin="75,270,0,0" TextWrapping="Wrap" Text="Input" VerticalAlignment="Top"/>
         <TextBlock x:Name="FileBox" HorizontalAlignment="Left" Margin="115,270,0,0" TextWrapping="Wrap" Text="No file selected" VerticalAlignment="Top" Width="430"/>
         <Button x:Name="BrowseFileButton" Content="Browse" HorizontalAlignment="Left" Margin="557,264,0,0" VerticalAlignment="Top" Width="75" Click="BrowseFileButton_Click"/>
-        <Button x:Name="BrowseFolderButton" Content="Browse" HorizontalAlignment="Left" Margin="557,163,0,0" VerticalAlignment="Top" Width="75" Click="BrowseFolderButton_Click_1"/>
+        <Button x:Name="BrowseFolderButton" Content="Browse" HorizontalAlignment="Left" Margin="557,163,0,0" VerticalAlignment="Top" Width="75" Click="BrowseFolderButton_Click"/>
 
     </Grid>
 </Window>

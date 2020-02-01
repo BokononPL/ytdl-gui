@@ -51,7 +51,7 @@ namespace WpfApp1
 				FileBox.Text = dialog.FileName;
 		}
 
-		private void BrowseFolderButton_Click_1(object sender, RoutedEventArgs e)
+		private void BrowseFolderButton_Click(object sender, RoutedEventArgs e)
 		{
 			FolderBrowserDialog folderDialog = new FolderBrowserDialog();
 			folderDialog.SelectedPath = "C:\\";
