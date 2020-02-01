@@ -60,5 +60,18 @@ namespace WpfApp1
 			if (result.ToString() == "OK")
 				PathBox.Text = folderDialog.SelectedPath;
 		}
+
+		private void ConvertButton_Click(object sender, RoutedEventArgs e)
+		{
+			string link = AddressBox.Text;
+			string outputFolderOption = "";
+			if (PathBox.Text != "")
+			{
+				outputFolderOption = $" -i \"{PathBox.Text}\" -f mp3 -q:a 2 -filter:a \"volume=0.5\" \"{PathBox.Text}\\output.mp3\"";
+			}
+			string strCmdText;
+			strCmdText = link + outputFolderOption;
+			System.Diagnostics.Process.Start("ffmpeg.exe", strCmdText);
+		}
 	}
 }
