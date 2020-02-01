@@ -28,6 +28,11 @@ namespace WpfApp1
 		private void DownloadButton_Click(object sender, RoutedEventArgs e)
 		{
 
+			String link = AddressBox.Text;
+
+			string strCmdText;
+			strCmdText = link;
+			System.Diagnostics.Process.Start("youtube-dl.exe", strCmdText);
 		}
 	}
 }
