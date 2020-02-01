@@ -35,9 +35,9 @@ namespace WpfApp1
 			{
 				outputFolderOption = $" -o \"{PathBox.Text}\\%(title)s.%(ext)s\"";
 			}
-			string strCmdText = "/k youtube-dl.exe ";
-			strCmdText += link + outputFolderOption;
-			var process = System.Diagnostics.Process.Start("cmd.exe", strCmdText);
+			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } youtube-dl.exe ";
+			programArg += link + outputFolderOption;
+			var process = System.Diagnostics.Process.Start("cmd.exe", programArg);
 			process.WaitForExit();
 		}
 
