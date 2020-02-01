@@ -33,7 +33,7 @@ namespace WpfApp1
 			string outputFolderOption = "";
 			if (PathBox.Text != "")
 			{
-				outputFolderOption = $"'{PathBox.Text}\\%(title)s.%(ext)s'";
+				outputFolderOption = $" -o '{PathBox.Text}\\%(title)s.%(ext)s'";
 			}
 			string strCmdText;
 			strCmdText = link + outputFolderOption;
