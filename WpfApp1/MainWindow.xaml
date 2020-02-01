@@ -18,6 +18,10 @@
         <TextBlock x:Name="FileBox" HorizontalAlignment="Left" Margin="115,270,0,0" TextWrapping="Wrap" Text="No file selected" VerticalAlignment="Top" Width="430"/>
         <Button x:Name="BrowseFileButton" Content="Browse" HorizontalAlignment="Left" Margin="557,264,0,0" VerticalAlignment="Top" Width="75" Click="BrowseFileButton_Click"/>
         <Button x:Name="BrowseFolderButton" Content="Browse" HorizontalAlignment="Left" Margin="557,163,0,0" VerticalAlignment="Top" Width="75" Click="BrowseFolderButton_Click"/>
+        <Slider x:Name="AudioQualitySlider" HorizontalAlignment="Left" Margin="166,302,0,0" VerticalAlignment="Top" Width="182" Maximum="9" Minimum="0"     IsSnapToTickEnabled="True"
+            TickFrequency="1" Value="{Binding ElementName=AudioQualityTextBox, Path=Text, UpdateSourceTrigger=LostFocus}" Height="23"/>
+        <TextBox x:Name="AudioQualityTextBox" HorizontalAlignment="Left" Height="23" Margin="353,302,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="48" Text="{Binding ElementName=AudioQualitySlider, Path=Value, UpdateSourceTrigger=PropertyChanged}"/>
+        <Label Content="Audio quality" HorizontalAlignment="Left" Margin="75,299,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.581,-0.075" Width="86"/>
         <Button x:Name="ConvertButton" Content="Convert" HorizontalAlignment="Left" Margin="557,388,0,0" VerticalAlignment="Top" Width="75" Click="ConvertButton_Click"/>
 
     </Grid>
