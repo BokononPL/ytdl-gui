@@ -25,6 +25,7 @@ namespace WpfApp1
 		public MainWindow()
 		{
 			InitializeComponent();
+			PathBox.Text = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 		}
 
 		private void DownloadButton_Click(object sender, RoutedEventArgs e)
@@ -45,7 +46,7 @@ namespace WpfApp1
 		private void BrowseFileButton_Click(object sender, RoutedEventArgs e)
 		{
 			OpenFileDialog dialog = new OpenFileDialog();
-			dialog.InitialDirectory = "C:\\";
+			dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
 			DialogResult result = dialog.ShowDialog();
 			if (result.ToString() == "OK")
@@ -55,7 +56,7 @@ namespace WpfApp1
 		private void BrowseFolderButton_Click(object sender, RoutedEventArgs e)
 		{
 			FolderBrowserDialog folderDialog = new FolderBrowserDialog();
-			folderDialog.SelectedPath = "C:\\";
+			folderDialog.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
 
 			DialogResult result = folderDialog.ShowDialog();
 			if (result.ToString() == "OK")
