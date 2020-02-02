@@ -14,6 +14,8 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
 
 namespace WpfApp1
 {
@@ -51,6 +53,9 @@ namespace WpfApp1
 			DialogResult result = dialog.ShowDialog();
 			if (result.ToString() == "OK")
 				FileBox.Text = dialog.FileName;
+			var duration = GetDuration(dialog.FileName);
+			LengthSlider.Maximum = duration;
+			LengthSlider.HigherValue = duration;
 		}
 
 		private void BrowseFolderButton_Click(object sender, RoutedEventArgs e)
@@ -70,7 +75,12 @@ namespace WpfApp1
 			if (PathBox.Text != "")
 			{
 				string fileName = System.IO.Path.GetFileNameWithoutExtension(FileBox.Text);
-				outputFolderOption = $" -i \"{FileBox.Text}\" -f mp3 -q:a {AudioQualitySlider.Value} -filter:a \"volume={VolumeSlider.Value.ToString().Replace(',', '.')}\" \"{PathBox.Text}\\{fileName}.mp3\"";
+				var vol = VolumeSlider.Value.ToString().Replace(',', '.');
+				TimeSpan startTime = TimeSpan.FromSeconds(LengthSlider.LowerValue);
+				string startTimeStr = startTime.ToString(@"hh\:mm\:ss\.fff");
+				TimeSpan endTime = TimeSpan.FromSeconds(LengthSlider.HigherValue);
+				string endTimeStr = endTime.ToString(@"hh\:mm\:ss\.fff");
+				outputFolderOption = $" -i \"{FileBox.Text}\" -f mp3 -q:a {AudioQualitySlider.Value} -filter:a \"volume={vol}\"  -ss {startTimeStr} -to {endTimeStr} \"{PathBox.Text}\\{fileName}.mp3\"";
 			}
 			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } ffmpeg.exe ";
 			programArg += outputFolderOption;
@@ -80,7 +90,7 @@ namespace WpfApp1
 		private void DisableButtonFor(System.Windows.Controls.Button button, int ms) 
 		{
 			button.IsEnabled = false;
-			Task ButonDisabledTask = Task.Delay(1000);
+			Task ButonDisabledTask = Task.Delay(ms);
 			ButonDisabledTask.ContinueWith(t =>
 			{
 				this.Dispatcher.Invoke(() =>
@@ -94,6 +104,24 @@ namespace WpfApp1
 		{
 			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } youtube-dl.exe -U";
 			var process = System.Diagnostics.Process.Start(Environment.ExpandEnvironmentVariables("%SystemRoot%") + @"\System32\cmd.exe", programArg);
+		}
+
+		private double GetDuration(string fileName)
+		{
+			string ffprobeFindDur = $"/c ffprobe.exe -i \"{fileName}\" -show_format | find \"duration\" ";
+			Process process = new Process();
+			process.StartInfo.FileName = Environment.ExpandEnvironmentVariables("%SystemRoot%") + @"\System32\cmd.exe";
+			process.StartInfo.Arguments = ffprobeFindDur; // Note the /c command (*)
+			process.StartInfo.UseShellExecute = false;
+			process.StartInfo.RedirectStandardOutput = true;
+			process.StartInfo.RedirectStandardError = true;
+			process.Start();
+			string output = process.StandardOutput.ReadToEnd();
+			string[] split = output.Trim().Split('=');
+			double result = 0;
+			Double.TryParse(split[1], out result);
+			process.WaitForExit();
+			return result;
 		}
 	}
 }
