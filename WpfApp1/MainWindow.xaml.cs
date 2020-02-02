@@ -70,7 +70,7 @@ namespace WpfApp1
 			if (PathBox.Text != "")
 			{
 				string fileName = System.IO.Path.GetFileNameWithoutExtension(FileBox.Text);
-				outputFolderOption = $" -i \"{FileBox.Text}\" -f mp3 -q:a {AudioQualitySlider.Value} -filter:a \"volume={VolumeSlider.Value}\" \"{PathBox.Text}\\{fileName}.mp3\"";
+				outputFolderOption = $" -i \"{FileBox.Text}\" -f mp3 -q:a {AudioQualitySlider.Value} -filter:a \"volume={VolumeSlider.Value.ToString().Replace(',', '.')}\" \"{PathBox.Text}\\{fileName}.mp3\"";
 			}
 			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } ffmpeg.exe ";
 			programArg += outputFolderOption;
