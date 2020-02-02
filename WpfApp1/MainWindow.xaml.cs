@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using System.IO;
 using System.Windows.Controls;
 using System.Windows.Data;
 using System.Windows.Documents;
@@ -68,7 +69,8 @@ namespace WpfApp1
 			string outputFolderOption = "";
 			if (PathBox.Text != "")
 			{
-				outputFolderOption = $" -i \"{FileBox.Text}\" -f mp3 -q:a {AudioQualitySlider.Value} -filter:a \"volume={VolumeSlider.Value}\" \"{PathBox.Text}\\output.mp3\"";
+				string fileName = System.IO.Path.GetFileNameWithoutExtension(FileBox.Text);
+				outputFolderOption = $" -i \"{FileBox.Text}\" -f mp3 -q:a {AudioQualitySlider.Value} -filter:a \"volume={VolumeSlider.Value}\" \"{PathBox.Text}\\{fileName}.mp3\"";
 			}
 			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } ffmpeg.exe ";
 			programArg += outputFolderOption;
