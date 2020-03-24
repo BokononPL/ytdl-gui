@@ -84,9 +84,9 @@ namespace WpfApp1
 				var vol = VolumeSlider.Value.ToString().Replace(',', '.');
 				string fadecommand = "";
 				Double.TryParse(FadeOutBox.Text, NumberStyles.Number, CultureInfo.InvariantCulture, out double fadeoutoffset);
-				fadeoutoffset = - fadeoutoffset + FFProbeUtils.FromFormattedString(EndTimeBox.Text);
+				fadeoutoffset = - fadeoutoffset + FFProbeUtils.FromFormattedString(EndTimeBox.Text) - 1;
 				if (!(FadeInBox.Text == "")) fadecommand += $",afade=type=in:start_time={FFProbeUtils.FromFormattedString(StartTimeBox.Text)}:duration={FadeInBox.Text}";
-				if (!(FadeOutBox.Text == "")) fadecommand += $",afade=type=out:start_time={fadeoutoffset.ToString()}:duration={FadeOutBox.Text}";
+				if (!(FadeOutBox.Text == "")) fadecommand += $",afade=type=out:start_time=\"{fadeoutoffset.ToString().Replace(',', '.')}\":duration={FadeOutBox.Text}";
 				outputFolderOption = $" -i \"{FileBox.Text}\" -f mp3 -q:a {AudioQualitySlider.Value} -filter_complex \"[0:a]volume={vol}{fadecommand}[a]\" -ss {StartTimeBox.Text} -to {EndTimeBox.Text} -map \"[a]\" \"{PathBox.Text}\\{fileName}.mp3\"";
 			}
 			string programArg = "/c ffmpeg.exe ";
