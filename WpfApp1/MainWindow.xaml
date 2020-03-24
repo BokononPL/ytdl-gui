@@ -7,41 +7,41 @@
         mc:Ignorable="d"
         Title="YTDL GUI" ResizeMode="NoResize" Height="700" Width="700">
     <Grid>
-        <Button x:Name="DownloadButton" Content="Download" HorizontalAlignment="Left" Margin="557,129,0,0" VerticalAlignment="Top" Width="75" Click="DownloadButton_Click"/>
-        <TextBox x:Name="AddressBox" HorizontalAlignment="Left" Height="23" Margin="115,128,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="430"/>
-        <TextBlock HorizontalAlignment="Left" Margin="82,129,0,0" TextWrapping="Wrap" Text="Link" VerticalAlignment="Top" Height="22"/>
-        <TextBlock x:Name="PathBox" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="115,166,0,0" Width="430" Height="22"/>
-        <TextBlock HorizontalAlignment="Left" Margin="82,97,0,0" TextWrapping="Wrap" Text="Download" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="53,166,0,0" TextWrapping="Wrap" Text="Destination" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="82,241,0,0" TextWrapping="Wrap" Text="Convert &amp; Edit" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="75,270,0,0" TextWrapping="Wrap" Text="Input" VerticalAlignment="Top"/>
-        <TextBlock x:Name="FileBox" HorizontalAlignment="Left" Margin="115,270,0,0" TextWrapping="Wrap" Text="No file selected" VerticalAlignment="Top" Width="430"/>
-        <Button x:Name="BrowseFileButton" Content="Browse" HorizontalAlignment="Left" Margin="557,264,0,0" VerticalAlignment="Top" Width="75" Click="BrowseFileButton_Click"/>
-        <Button x:Name="BrowseFolderButton" Content="Browse" HorizontalAlignment="Left" Margin="557,163,0,0" VerticalAlignment="Top" Width="75" Click="BrowseFolderButton_Click"/>
-        <Button x:Name="ConvertButton" Content="Convert" HorizontalAlignment="Left" Margin="557,465,0,0" VerticalAlignment="Top" Width="75" Click="ConvertButton_Click"/>
-        <CheckBox x:Name="KeepCmdOpen" Content="Keep cmd open" IsChecked="False" HorizontalAlignment="Left" Margin="315,51,0,0" VerticalAlignment="Top" Height="19" RenderTransformOrigin="0.548,1.29"/>
-        <Slider x:Name="AudioQualitySlider" HorizontalAlignment="Left" Margin="240,297,0,0" VerticalAlignment="Top" Width="182" Maximum="9" Minimum="0"     IsSnapToTickEnabled="True"
+        <Button x:Name="DownloadButton" Content="Download" HorizontalAlignment="Left" Margin="557,70,0,0" VerticalAlignment="Top" Width="75" Click="DownloadButton_Click"/>
+        <TextBox x:Name="AddressBox" HorizontalAlignment="Left" Height="23" Margin="115,69,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="430"/>
+        <TextBlock HorizontalAlignment="Left" Margin="82,70,0,0" TextWrapping="Wrap" Text="Link" VerticalAlignment="Top" Height="22"/>
+        <TextBlock x:Name="PathBox" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="115,102,0,0" Width="430" Height="22"/>
+        <TextBlock HorizontalAlignment="Left" Margin="82,38,0,0" TextWrapping="Wrap" Text="Download" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="43,106,0,0" TextWrapping="Wrap" Text="Destination" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="82,181,0,0" TextWrapping="Wrap" Text="Convert &amp; Edit" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="82,210,0,0" TextWrapping="Wrap" Text="Input" VerticalAlignment="Top"/>
+        <TextBlock x:Name="FileBox" HorizontalAlignment="Left" Margin="115,210,0,0" TextWrapping="Wrap" Text="No file selected" VerticalAlignment="Top" Width="430"/>
+        <Button x:Name="BrowseFileButton" Content="Browse" HorizontalAlignment="Left" Margin="557,204,0,0" VerticalAlignment="Top" Width="75" Click="BrowseFileButton_Click"/>
+        <Button x:Name="BrowseFolderButton" Content="Browse" HorizontalAlignment="Left" Margin="557,104,0,0" VerticalAlignment="Top" Width="75" Click="BrowseFolderButton_Click"/>
+        <Button x:Name="ConvertButton" Content="Convert" HorizontalAlignment="Left" Margin="557,387,0,0" VerticalAlignment="Top" Width="75" Click="ConvertButton_Click" Height="38"/>
+        <Slider x:Name="AudioQualitySlider" HorizontalAlignment="Left" Margin="240,237,0,0" VerticalAlignment="Top" Width="182" Maximum="9" Minimum="0"     IsSnapToTickEnabled="True"
             TickFrequency="1" Height="23" Value="2"/>
-        <Label Content="Audio quality (lower is better)" HorizontalAlignment="Left" Margin="75,294,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.581,-0.075" Width="192"/>
-        <TextBlock HorizontalAlignment="Left" Margin="427,299,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="0.493,-0.704" Text="{Binding ElementName=AudioQualitySlider, Path=Value}"/>
-        <Button x:Name="UpdateButton" Content="Update" HorizontalAlignment="Left" Margin="557,48,0,0" VerticalAlignment="Top" Width="75" Click="UpdateButton_Click"/>
+        <Label Content="Audio quality (lower is better)" HorizontalAlignment="Left" Margin="75,234,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.581,-0.075" Width="192"/>
+        <TextBlock HorizontalAlignment="Left" Margin="427,239,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="0.493,-0.704" Text="{Binding ElementName=AudioQualitySlider, Path=Value}"/>
+        <Button x:Name="UpdateButton" Content="Update" HorizontalAlignment="Left" Margin="598,23,0,0" VerticalAlignment="Top" Width="75" Click="UpdateButton_Click"/>
 
-        <Slider x:Name="VolumeSlider" HorizontalAlignment="Left" Margin="240,328,0,0" VerticalAlignment="Top" Width="182" Maximum="3.0" Minimum="0.1"     IsSnapToTickEnabled="True"
+        <Slider x:Name="VolumeSlider" HorizontalAlignment="Left" Margin="240,268,0,0" VerticalAlignment="Top" Width="182" Maximum="3.0" Minimum="0.1"     IsSnapToTickEnabled="True"
             TickFrequency="0.1" Height="23" Value="1.0"/>
-        <Label Content="Volume" HorizontalAlignment="Left" Margin="75,325,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.581,-0.075" Width="86"/>
-        <TextBlock HorizontalAlignment="Left" Margin="427,330,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="0.493,-0.704" Text="{Binding ElementName=VolumeSlider, Path=Value}"/>
-        <TextBlock HorizontalAlignment="Left" Margin="82,367,0,0" TextWrapping="Wrap" Text="Cut" VerticalAlignment="Top"/>
-        <TextBox x:Name="StartTimeBox" HorizontalAlignment="Left" Height="23" Margin="147,387,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="77"/>
-        <TextBlock HorizontalAlignment="Left" Margin="82,388,0,0" TextWrapping="Wrap" Text="Start time" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="270,388,0,0" TextWrapping="Wrap" Text="End time" VerticalAlignment="Top"/>
-        <TextBox x:Name="EndTimeBox" HorizontalAlignment="Left" Height="23" Margin="338,385,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="84"/>
-        <TextBlock HorizontalAlignment="Left" Margin="82,426,0,0" TextWrapping="Wrap" Text="Fade in" VerticalAlignment="Top"/>
-        <TextBox x:Name="FadeInBox" HorizontalAlignment="Left" Height="23" Margin="147,423,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="77"/>
-        <TextBlock HorizontalAlignment="Left" Margin="270,426,0,0" TextWrapping="Wrap" Text="Fade out" VerticalAlignment="Top"/>
-        <TextBox x:Name="FadeOutBox" HorizontalAlignment="Left" Height="23" Margin="338,423,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="84"/>
-        <Button x:Name="RecentFileButton" Content="Recent" HorizontalAlignment="Left" Margin="477,264,0,0" VerticalAlignment="Top" Width="75" Click="RecentFileButton_Click"/>
-        <ScrollViewer x:Name="ConsoleScrollContainer" Margin="0,509,0,0" Height="Auto">
-        <TextBlock x:Name="ConsoleOutput" HorizontalAlignment="Left" Margin="10,529,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="Auto" Width="Auto"/>
+        <Label Content="Volume" HorizontalAlignment="Left" Margin="75,265,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.581,-0.075" Width="86"/>
+        <TextBlock HorizontalAlignment="Left" Margin="427,270,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="0.493,-0.704" Text="{Binding ElementName=VolumeSlider, Path=Value}"/>
+        <TextBlock HorizontalAlignment="Left" Margin="82,307,0,0" TextWrapping="Wrap" Text="Cut" VerticalAlignment="Top"/>
+        <TextBox x:Name="StartTimeBox" HorizontalAlignment="Left" Height="23" Margin="147,327,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="77"/>
+        <TextBlock HorizontalAlignment="Left" Margin="82,328,0,0" TextWrapping="Wrap" Text="Start time" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="270,328,0,0" TextWrapping="Wrap" Text="End time" VerticalAlignment="Top"/>
+        <TextBox x:Name="EndTimeBox" HorizontalAlignment="Left" Height="23" Margin="338,325,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="84"/>
+        <TextBlock HorizontalAlignment="Left" Margin="82,366,0,0" TextWrapping="Wrap" Text="Fade in" VerticalAlignment="Top"/>
+        <TextBox x:Name="FadeInBox" HorizontalAlignment="Left" Height="23" Margin="147,363,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="77"/>
+        <TextBlock HorizontalAlignment="Left" Margin="270,366,0,0" TextWrapping="Wrap" Text="Fade out" VerticalAlignment="Top"/>
+        <TextBox x:Name="FadeOutBox" HorizontalAlignment="Left" Height="23" Margin="338,363,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="84"/>
+        <Button x:Name="RecentFileButton" Content="Recent" HorizontalAlignment="Left" Margin="477,204,0,0" VerticalAlignment="Top" Width="75" Click="RecentFileButton_Click"/>
+        <ScrollViewer x:Name="ConsoleScrollContainer" Margin="0,449,0,10" Height="Auto">
+            <TextBlock x:Name="ConsoleOutput" HorizontalAlignment="Left" Margin="10,529,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="Auto" Width="Auto"/>
         </ScrollViewer>
+        <CheckBox x:Name="DeleteOriginalFile" Content="Delete original file" HorizontalAlignment="Left" Margin="82,399,0,0" VerticalAlignment="Top" RenderTransformOrigin="0.451,0.467" Height="16"/>
     </Grid>
 </Window>

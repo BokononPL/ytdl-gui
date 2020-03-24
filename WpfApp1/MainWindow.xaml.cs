@@ -23,7 +23,7 @@ namespace WpfApp1
 	public partial class MainWindow : Window
 	{
 		public static readonly string CMD_EXE = Environment.ExpandEnvironmentVariables("%SystemRoot%") + @"\System32\cmd.exe";
-		public static string RecentFileName = null;
+
 		public ConsoleOutputCapture ConsoleOutputCapture;
 
 		public MainWindow()
@@ -43,7 +43,7 @@ namespace WpfApp1
 			{
 				outputFolderOption = $" -o \"{PathBox.Text}\\%(title)s.%(ext)s\"";
 			}
-			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } youtube-dl.exe ";
+			string programArg = "/c youtube-dl.exe ";
 			programArg += link + outputFolderOption;
 			ConsoleOutputCapture.Clear();
 			StartProcessHidden(programArg, (time, output) => ConsoleOutputCapture.Write($"[ytdl-gui] Finished downloading in {time.TotalSeconds} s"));
@@ -89,9 +89,16 @@ namespace WpfApp1
 				if (!(FadeOutBox.Text == "")) fadecommand += $",afade=type=out:start_time={fadeoutoffset.ToString()}:duration={FadeOutBox.Text}";
 				outputFolderOption = $" -i \"{FileBox.Text}\" -f mp3 -q:a {AudioQualitySlider.Value} -filter_complex \"[0:a]volume={vol}{fadecommand}[a]\" -ss {StartTimeBox.Text} -to {EndTimeBox.Text} -map \"[a]\" \"{PathBox.Text}\\{fileName}.mp3\"";
 			}
-			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } ffmpeg.exe ";
+			string programArg = "/c ffmpeg.exe ";
 			programArg += outputFolderOption;
-			StartProcessHidden(programArg, (time, output) => ConsoleOutputCapture.Write($"[ytdl-gui] Finished converting in {time.TotalSeconds} s"));
+			StartProcessHidden(programArg, (time, output) => { 
+				ConsoleOutputCapture.Write($"[ytdl-gui] Finished converting in {time.TotalSeconds} s"); 
+				if(DeleteOriginalFile.IsChecked == true)
+				{
+					File.Delete(FileBox.Text);
+					ConsoleOutputCapture.Write($"[ytdl-gui] Deleted the original file at {FileBox.Text}");
+				}
+			});
 		}
 
 		private void DisableButtonFor(System.Windows.Controls.Button button, int ms) 
@@ -109,7 +116,7 @@ namespace WpfApp1
 
 		private void UpdateButton_Click(object sender, RoutedEventArgs e)
 		{
-			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } youtube-dl.exe -U";
+			string programArg = "/c youtube-dl.exe -U";
 			var process = Process.Start(CMD_EXE, programArg);
 		}
 
@@ -145,7 +152,9 @@ namespace WpfApp1
 			process.EnableRaisingEvents = true;
 			process.BeginErrorReadLine();
 			process.BeginOutputReadLine();
-			process.Exited += (obj, a) => onFinishedCallback.Invoke(process.ExitTime - process.StartTime, ConsoleOutputCapture.StoredOutput);
+			process.Exited += (obj, a) => this.Dispatcher.Invoke(() => {
+				onFinishedCallback.Invoke(process.ExitTime - process.StartTime, ConsoleOutputCapture.StoredOutput);
+			});
 		}
 
 		private void StartProcessHidden(string args)
