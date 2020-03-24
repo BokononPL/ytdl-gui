@@ -31,13 +31,13 @@
         <Label Content="Volume" HorizontalAlignment="Left" Margin="75,325,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.581,-0.075" Width="86"/>
         <TextBlock HorizontalAlignment="Left" Margin="427,330,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="0.493,-0.704" Text="{Binding ElementName=VolumeSlider, Path=Value}"/>
         <TextBlock HorizontalAlignment="Left" Margin="82,367,0,0" TextWrapping="Wrap" Text="Cut" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="147,387,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="77"/>
+        <TextBox x:Name="StartTimeBox" HorizontalAlignment="Left" Height="23" Margin="147,387,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="77"/>
         <TextBlock HorizontalAlignment="Left" Margin="82,388,0,0" TextWrapping="Wrap" Text="Start time" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="270,388,0,0" TextWrapping="Wrap" Text="End time" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="338,385,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="84"/>
+        <TextBox x:Name="EndTimeBox" HorizontalAlignment="Left" Height="23" Margin="338,385,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="84"/>
         <TextBlock HorizontalAlignment="Left" Margin="82,426,0,0" TextWrapping="Wrap" Text="Fade in" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="147,423,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="77"/>
+        <TextBox x:Name="FadeInBox" HorizontalAlignment="Left" Height="23" Margin="147,423,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="77"/>
         <TextBlock HorizontalAlignment="Left" Margin="270,426,0,0" TextWrapping="Wrap" Text="Fade out" VerticalAlignment="Top"/>
-        <TextBox HorizontalAlignment="Left" Height="23" Margin="338,423,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="84"/>
+        <TextBox x:Name="FadeOutBox" HorizontalAlignment="Left" Height="23" Margin="338,423,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="84"/>
     </Grid>
 </Window>
