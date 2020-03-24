@@ -14,14 +14,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Diagnostics;
 
 namespace WpfApp1
 {
-	/// <summary>
-	/// Interaction logic for MainWindow.xaml
-	/// </summary>
 	public partial class MainWindow : Window
 	{
+		public static readonly string CMD_EXE = Environment.ExpandEnvironmentVariables("%SystemRoot%") + @"\System32\cmd.exe";
+
 		public MainWindow()
 		{
 			InitializeComponent();
@@ -39,7 +39,7 @@ namespace WpfApp1
 			}
 			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } youtube-dl.exe ";
 			programArg += link + outputFolderOption;
-			var process = System.Diagnostics.Process.Start(Environment.ExpandEnvironmentVariables("%SystemRoot%") + @"\System32\cmd.exe", programArg);
+			Process.Start(CMD_EXE, programArg);
 		}
 
 
@@ -50,7 +50,13 @@ namespace WpfApp1
 
 			DialogResult result = dialog.ShowDialog();
 			if (result.ToString() == "OK")
+			{
 				FileBox.Text = dialog.FileName;
+				var durationStr = FFProbeUtils.GetFormattedDuration(dialog.FileName);
+				StartTimeBox.Text = FFProbeUtils.FormatDuration(0);
+				EndTimeBox.Text = durationStr;
+			}
+			
 		}
 
 		private void BrowseFolderButton_Click(object sender, RoutedEventArgs e)
@@ -60,7 +66,9 @@ namespace WpfApp1
 
 			DialogResult result = folderDialog.ShowDialog();
 			if (result.ToString() == "OK")
+			{
 				PathBox.Text = folderDialog.SelectedPath;
+			}
 		}
 
 		private void ConvertButton_Click(object sender, RoutedEventArgs e)
@@ -79,7 +87,7 @@ namespace WpfApp1
 			}
 			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } ffmpeg.exe ";
 			programArg += outputFolderOption;
-			System.Diagnostics.Process.Start(Environment.ExpandEnvironmentVariables("%SystemRoot%") + @"\System32\cmd.exe", programArg);
+			Process.Start(CMD_EXE, programArg);
 		}
 
 		private void DisableButtonFor(System.Windows.Controls.Button button, int ms) 
@@ -98,7 +106,9 @@ namespace WpfApp1
 		private void UpdateButton_Click(object sender, RoutedEventArgs e)
 		{
 			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } youtube-dl.exe -U";
-			var process = System.Diagnostics.Process.Start(Environment.ExpandEnvironmentVariables("%SystemRoot%") + @"\System32\cmd.exe", programArg);
+			var process = Process.Start(CMD_EXE, programArg);
 		}
+
+
 	}
 }
