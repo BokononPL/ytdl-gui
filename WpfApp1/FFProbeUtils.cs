@@ -38,5 +38,10 @@ namespace WpfApp1
 			return FormatDuration(GetDurationInSeconds(filename));
 		}
 
+		public static double FromFormattedString(string formatted)
+		{
+			TimeSpan.TryParse(formatted, out TimeSpan res);
+			return res.TotalSeconds;
+		}
 	}
 }

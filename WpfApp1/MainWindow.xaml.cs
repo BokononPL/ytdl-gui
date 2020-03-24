@@ -15,6 +15,7 @@ using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
+using System.Globalization;
 
 namespace WpfApp1
 {
@@ -79,11 +80,12 @@ namespace WpfApp1
 			{
 				string fileName = System.IO.Path.GetFileNameWithoutExtension(FileBox.Text);
 				var vol = VolumeSlider.Value.ToString().Replace(',', '.');
-				TimeSpan startTime = TimeSpan.FromSeconds(Convert.ToDouble(StartTimeBox.Text));
-				string startTimeStr = startTime.ToString(@"hh\:mm\:ss\.fff");
-				TimeSpan endTime = TimeSpan.FromSeconds(Convert.ToDouble(EndTimeBox.Text));
-				string endTimeStr = endTime.ToString(@"hh\:mm\:ss\.fff");
-				outputFolderOption = $" -i \"{FileBox.Text}\" -f mp3 -q:a {AudioQualitySlider.Value} -filter:a \"volume={vol}\"  -ss {startTimeStr} -to {endTimeStr} \"{PathBox.Text}\\{fileName}.mp3\"";
+				string fadecommand = "";
+				Double.TryParse(FadeOutBox.Text, NumberStyles.Number, CultureInfo.InvariantCulture, out double fadeoutoffset);
+				fadeoutoffset = - fadeoutoffset + FFProbeUtils.FromFormattedString(EndTimeBox.Text);
+				if (!(FadeInBox.Text == "")) fadecommand += $",afade=type=in:start_time={FFProbeUtils.FromFormattedString(StartTimeBox.Text)}:duration={FadeInBox.Text}";
+				if (!(FadeOutBox.Text == "")) fadecommand += $",afade=type=out:start_time={fadeoutoffset.ToString()}:duration={FadeOutBox.Text}";
+				outputFolderOption = $" -i \"{FileBox.Text}\" -f mp3 -q:a {AudioQualitySlider.Value} -filter_complex \"[0:a]volume={vol}{fadecommand}[a]\" -ss {StartTimeBox.Text} -to {EndTimeBox.Text} -map \"[a]\" \"{PathBox.Text}\\{fileName}.mp3\"";
 			}
 			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } ffmpeg.exe ";
 			programArg += outputFolderOption;
