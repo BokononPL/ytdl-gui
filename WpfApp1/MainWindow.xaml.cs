@@ -16,6 +16,7 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using System.Diagnostics;
 using System.Globalization;
+using System.Text.RegularExpressions;
 
 namespace WpfApp1
 {
@@ -45,7 +46,7 @@ namespace WpfApp1
 			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } youtube-dl.exe ";
 			programArg += link + outputFolderOption;
 			ConsoleOutputCapture.Clear();
-			StartProcessHidden(programArg);
+			StartProcessHidden(programArg, (time, output) => ConsoleOutputCapture.Write($"[ytdl-gui] Finished downloading in {time.TotalSeconds} s"));
 		}
 
 
@@ -56,9 +57,7 @@ namespace WpfApp1
 			DialogResult result = dialog.ShowDialog();
 			if (result.ToString() == "OK")
 			{
-				FileBox.Text = dialog.FileName;
-				StartTimeBox.Text = FFProbeUtils.FormatDuration(0);
-				EndTimeBox.Text = FFProbeUtils.GetFormattedDuration(dialog.FileName);
+				SetFilenameAndDuration(dialog.FileName);
 			}
 			
 		}
@@ -92,18 +91,18 @@ namespace WpfApp1
 			}
 			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } ffmpeg.exe ";
 			programArg += outputFolderOption;
-			StartProcessHidden(programArg);
+			StartProcessHidden(programArg, (time, output) => ConsoleOutputCapture.Write($"[ytdl-gui] Finished converting in {time.TotalSeconds} s"));
 		}
 
 		private void DisableButtonFor(System.Windows.Controls.Button button, int ms) 
 		{
 			button.IsEnabled = false;
-			Task ButonDisabledTask = Task.Delay(1000);
+			Task ButonDisabledTask = Task.Delay(ms);
 			ButonDisabledTask.ContinueWith(t =>
 			{
 				this.Dispatcher.Invoke(() =>
 				{
-					ConvertButton.IsEnabled = true;
+					button.IsEnabled = true;
 				});
 			});
 		}
@@ -116,10 +115,10 @@ namespace WpfApp1
 
 		private void RecentFileButton_Click(object sender, RoutedEventArgs e)
 		{
-
+			SetFilenameAndDuration(GetConvertedFilename(ConsoleOutputCapture.StoredOutput));
 		}
 
-		private void StartProcessHidden(string args)
+		private void StartProcessHidden(string args, Action<TimeSpan, string> onFinishedCallback)
 		{
 			Process process = new Process()
 			{
@@ -143,8 +142,29 @@ namespace WpfApp1
 				if (!String.IsNullOrWhiteSpace(b.Data)) ConsoleOutputCapture.Write(b.Data);
 			};
 			process.Start();
+			process.EnableRaisingEvents = true;
 			process.BeginErrorReadLine();
 			process.BeginOutputReadLine();
+			process.Exited += (obj, a) => onFinishedCallback.Invoke(process.ExitTime - process.StartTime, ConsoleOutputCapture.StoredOutput);
+		}
+
+		private void StartProcessHidden(string args)
+		{
+			StartProcessHidden(args, (_, __) => { });
+		}
+
+		private string GetConvertedFilename(string ytdlOutput)
+		{
+			string pattern = "Merging formats into \"(.*)\"\\n";
+			var extractedFilename = Regex.Match(ytdlOutput, pattern);
+			return extractedFilename.Groups[1].Value;
+		}
+
+		private void SetFilenameAndDuration(string filename)
+		{
+			FileBox.Text = filename;
+			StartTimeBox.Text = FFProbeUtils.FormatDuration(0);
+			EndTimeBox.Text = FFProbeUtils.GetFormattedDuration(filename);
 		}
 	}
 }

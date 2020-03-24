@@ -13,12 +13,19 @@ namespace WpfApp1
 		public static double GetDurationInSeconds(string fileName)
 		{
 			string ffprobeFindDur = $"/c ffprobe.exe -i \"{fileName}\" -show_format | find \"duration\" ";
-			Process process = new Process();
-			process.StartInfo.FileName = Environment.ExpandEnvironmentVariables("%SystemRoot%") + @"\System32\cmd.exe";
-			process.StartInfo.Arguments = ffprobeFindDur;
-			process.StartInfo.UseShellExecute = false;
-			process.StartInfo.RedirectStandardOutput = true;
-			process.StartInfo.RedirectStandardError = true;
+			Process process = new Process()
+			{
+				StartInfo = new ProcessStartInfo()
+				{
+					FileName = Environment.ExpandEnvironmentVariables("%SystemRoot%") + @"\System32\cmd.exe",
+					Arguments = ffprobeFindDur,
+					UseShellExecute = false,
+					WindowStyle = ProcessWindowStyle.Hidden,
+					CreateNoWindow = true,
+					RedirectStandardOutput = true,
+					RedirectStandardError = true
+				}
+			};
 			process.Start();
 			string output = process.StandardOutput.ReadToEnd();
 			string[] split = output.Trim().Split('=');
