@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -21,7 +22,7 @@ namespace WpfApp1
 			process.Start();
 			string output = process.StandardOutput.ReadToEnd();
 			string[] split = output.Trim().Split('=');
-			Double.TryParse(split[1], out double result);
+			Double.TryParse(split[1], NumberStyles.Number, CultureInfo.InvariantCulture, out double result);
 			process.WaitForExit();
 			return result;
 		}
