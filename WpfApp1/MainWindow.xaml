@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="YTDL GUI" ResizeMode="NoResize" Height="500" Width="700">
+        Title="YTDL GUI" ResizeMode="NoResize" Height="600" Width="700">
     <Grid>
         <Button x:Name="DownloadButton" Content="Download" HorizontalAlignment="Left" Margin="557,129,0,0" VerticalAlignment="Top" Width="75" Click="DownloadButton_Click"/>
         <TextBox x:Name="AddressBox" HorizontalAlignment="Left" Height="23" Margin="115,128,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="430"/>
@@ -13,12 +13,12 @@
         <TextBlock x:Name="PathBox" HorizontalAlignment="Left" TextWrapping="Wrap" VerticalAlignment="Top" Margin="115,166,0,0" Width="430" Height="22"/>
         <TextBlock HorizontalAlignment="Left" Margin="82,97,0,0" TextWrapping="Wrap" Text="Download" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="53,166,0,0" TextWrapping="Wrap" Text="Destination" VerticalAlignment="Top"/>
-        <TextBlock HorizontalAlignment="Left" Margin="82,241,0,0" TextWrapping="Wrap" Text="Convert" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="82,241,0,0" TextWrapping="Wrap" Text="Convert &amp; Edit" VerticalAlignment="Top"/>
         <TextBlock HorizontalAlignment="Left" Margin="75,270,0,0" TextWrapping="Wrap" Text="Input" VerticalAlignment="Top"/>
         <TextBlock x:Name="FileBox" HorizontalAlignment="Left" Margin="115,270,0,0" TextWrapping="Wrap" Text="No file selected" VerticalAlignment="Top" Width="430"/>
         <Button x:Name="BrowseFileButton" Content="Browse" HorizontalAlignment="Left" Margin="557,264,0,0" VerticalAlignment="Top" Width="75" Click="BrowseFileButton_Click"/>
         <Button x:Name="BrowseFolderButton" Content="Browse" HorizontalAlignment="Left" Margin="557,163,0,0" VerticalAlignment="Top" Width="75" Click="BrowseFolderButton_Click"/>
-        <Button x:Name="ConvertButton" Content="Convert" HorizontalAlignment="Left" Margin="557,388,0,0" VerticalAlignment="Top" Width="75" Click="ConvertButton_Click"/>
+        <Button x:Name="ConvertButton" Content="Convert" HorizontalAlignment="Left" Margin="557,465,0,0" VerticalAlignment="Top" Width="75" Click="ConvertButton_Click"/>
         <CheckBox x:Name="KeepCmdOpen" Content="Keep cmd open" IsChecked="False" HorizontalAlignment="Left" Margin="315,51,0,0" VerticalAlignment="Top" Height="19" RenderTransformOrigin="0.548,1.29"/>
         <Slider x:Name="AudioQualitySlider" HorizontalAlignment="Left" Margin="240,297,0,0" VerticalAlignment="Top" Width="182" Maximum="9" Minimum="0"     IsSnapToTickEnabled="True"
             TickFrequency="1" Height="23" Value="2"/>
@@ -30,5 +30,14 @@
             TickFrequency="0.1" Height="23" Value="1.0"/>
         <Label Content="Volume" HorizontalAlignment="Left" Margin="75,325,0,0" VerticalAlignment="Top" RenderTransformOrigin="-0.581,-0.075" Width="86"/>
         <TextBlock HorizontalAlignment="Left" Margin="427,330,0,0" TextWrapping="Wrap" VerticalAlignment="Top" RenderTransformOrigin="0.493,-0.704" Text="{Binding ElementName=VolumeSlider, Path=Value}"/>
+        <TextBlock HorizontalAlignment="Left" Margin="82,367,0,0" TextWrapping="Wrap" Text="Cut" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="147,387,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="77"/>
+        <TextBlock HorizontalAlignment="Left" Margin="82,388,0,0" TextWrapping="Wrap" Text="Start time" VerticalAlignment="Top"/>
+        <TextBlock HorizontalAlignment="Left" Margin="270,388,0,0" TextWrapping="Wrap" Text="End time" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="338,385,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="84"/>
+        <TextBlock HorizontalAlignment="Left" Margin="82,426,0,0" TextWrapping="Wrap" Text="Fade in" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="147,423,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="77"/>
+        <TextBlock HorizontalAlignment="Left" Margin="270,426,0,0" TextWrapping="Wrap" Text="Fade out" VerticalAlignment="Top"/>
+        <TextBox HorizontalAlignment="Left" Height="23" Margin="338,423,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="84"/>
     </Grid>
 </Window>
