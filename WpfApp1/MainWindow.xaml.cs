@@ -22,11 +22,15 @@ namespace WpfApp1
 	public partial class MainWindow : Window
 	{
 		public static readonly string CMD_EXE = Environment.ExpandEnvironmentVariables("%SystemRoot%") + @"\System32\cmd.exe";
+		public static string RecentFileName = null;
+		public ConsoleOutputCapture ConsoleOutputCapture;
 
 		public MainWindow()
 		{
 			InitializeComponent();
 			PathBox.Text = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+			ConsoleOutputCapture = new ConsoleOutputCapture(ConsoleOutput, ConsoleScrollContainer, this.Dispatcher);
+			
 		}
 
 		private void DownloadButton_Click(object sender, RoutedEventArgs e)
@@ -40,7 +44,8 @@ namespace WpfApp1
 			}
 			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } youtube-dl.exe ";
 			programArg += link + outputFolderOption;
-			Process.Start(CMD_EXE, programArg);
+			ConsoleOutputCapture.Clear();
+			StartProcessHidden(programArg);
 		}
 
 
@@ -48,14 +53,12 @@ namespace WpfApp1
 		{
 			OpenFileDialog dialog = new OpenFileDialog();
 			dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-
 			DialogResult result = dialog.ShowDialog();
 			if (result.ToString() == "OK")
 			{
 				FileBox.Text = dialog.FileName;
-				var durationStr = FFProbeUtils.GetFormattedDuration(dialog.FileName);
 				StartTimeBox.Text = FFProbeUtils.FormatDuration(0);
-				EndTimeBox.Text = durationStr;
+				EndTimeBox.Text = FFProbeUtils.GetFormattedDuration(dialog.FileName);
 			}
 			
 		}
@@ -89,7 +92,7 @@ namespace WpfApp1
 			}
 			string programArg = $"{ ((KeepCmdOpen.IsChecked == true) ? "/k" : "/c") } ffmpeg.exe ";
 			programArg += outputFolderOption;
-			Process.Start(CMD_EXE, programArg);
+			StartProcessHidden(programArg);
 		}
 
 		private void DisableButtonFor(System.Windows.Controls.Button button, int ms) 
@@ -111,6 +114,37 @@ namespace WpfApp1
 			var process = Process.Start(CMD_EXE, programArg);
 		}
 
+		private void RecentFileButton_Click(object sender, RoutedEventArgs e)
+		{
 
+		}
+
+		private void StartProcessHidden(string args)
+		{
+			Process process = new Process()
+			{
+				StartInfo = new ProcessStartInfo()
+				{
+					FileName = CMD_EXE,
+					Arguments = args,
+					UseShellExecute = false,
+					WindowStyle = ProcessWindowStyle.Hidden,
+					CreateNoWindow = true,
+					RedirectStandardOutput = true,
+					RedirectStandardError = true
+				}
+			};
+			process.OutputDataReceived += (a, b) =>
+			{
+				if (!String.IsNullOrWhiteSpace(b.Data)) ConsoleOutputCapture.Write(b.Data);
+			};
+			process.ErrorDataReceived += (a, b) =>
+			{
+				if (!String.IsNullOrWhiteSpace(b.Data)) ConsoleOutputCapture.Write(b.Data);
+			};
+			process.Start();
+			process.BeginErrorReadLine();
+			process.BeginOutputReadLine();
+		}
 	}
 }

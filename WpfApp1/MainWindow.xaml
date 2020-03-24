@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:WpfApp1"
         mc:Ignorable="d"
-        Title="YTDL GUI" ResizeMode="NoResize" Height="600" Width="700">
+        Title="YTDL GUI" ResizeMode="NoResize" Height="700" Width="700">
     <Grid>
         <Button x:Name="DownloadButton" Content="Download" HorizontalAlignment="Left" Margin="557,129,0,0" VerticalAlignment="Top" Width="75" Click="DownloadButton_Click"/>
         <TextBox x:Name="AddressBox" HorizontalAlignment="Left" Height="23" Margin="115,128,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="430"/>
@@ -39,5 +39,9 @@
         <TextBox x:Name="FadeInBox" HorizontalAlignment="Left" Height="23" Margin="147,423,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="77"/>
         <TextBlock HorizontalAlignment="Left" Margin="270,426,0,0" TextWrapping="Wrap" Text="Fade out" VerticalAlignment="Top"/>
         <TextBox x:Name="FadeOutBox" HorizontalAlignment="Left" Height="23" Margin="338,423,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Width="84"/>
+        <Button x:Name="RecentFileButton" Content="Recent" HorizontalAlignment="Left" Margin="477,264,0,0" VerticalAlignment="Top" Width="75" Click="RecentFileButton_Click"/>
+        <ScrollViewer x:Name="ConsoleScrollContainer" Margin="0,509,0,0" Height="Auto">
+        <TextBlock x:Name="ConsoleOutput" HorizontalAlignment="Left" Margin="10,529,0,0" TextWrapping="Wrap" Text="" VerticalAlignment="Top" Height="Auto" Width="Auto"/>
+        </ScrollViewer>
     </Grid>
 </Window>
