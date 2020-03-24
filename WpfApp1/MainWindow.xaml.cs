@@ -122,7 +122,10 @@ namespace WpfApp1
 
 		private void RecentFileButton_Click(object sender, RoutedEventArgs e)
 		{
-			SetFilenameAndDuration(GetConvertedFilename(ConsoleOutputCapture.StoredOutput));
+			if (!String.IsNullOrEmpty(ConsoleOutputCapture.StoredOutput))
+			{
+				SetFilenameAndDuration(GetConvertedFilename(ConsoleOutputCapture.StoredOutput));
+			}
 		}
 
 		private void StartProcessHidden(string args, Action<TimeSpan, string> onFinishedCallback)
