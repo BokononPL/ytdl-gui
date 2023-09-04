@@ -17,21 +17,22 @@ using System.Windows.Shapes;
 using System.Diagnostics;
 using System.Globalization;
 using System.Text.RegularExpressions;
+using System.Windows.Media.TextFormatting;
+using System.ComponentModel;
+using Newtonsoft.Json.Linq;
+using Newtonsoft.Json;
 
 namespace WpfApp1
 {
 	public partial class MainWindow : Window
 	{
+		public string DownloadOut = "";
 		public static readonly string CMD_EXE = Environment.ExpandEnvironmentVariables("%SystemRoot%") + @"\System32\cmd.exe";
-
-		public ConsoleOutputCapture ConsoleOutputCapture;
 
 		public MainWindow()
 		{
 			InitializeComponent();
 			PathBox.Text = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-			ConsoleOutputCapture = new ConsoleOutputCapture(ConsoleOutput, ConsoleScrollContainer, this.Dispatcher);
-			
 		}
 
 		private void DownloadButton_Click(object sender, RoutedEventArgs e)
@@ -43,30 +44,31 @@ namespace WpfApp1
 			{
 				outputFolderOption = $" -o \"{PathBox.Text}\\%(title)s.%(ext)s\"";
 			}
-			string programArg = "/c youtube-dl.exe ";
+			string programArg = "/C yt-dlp ";
 			programArg += link + outputFolderOption;
-			ConsoleOutputCapture.Clear();
-			StartProcessHidden(programArg, (time, output) => ConsoleOutputCapture.Write($"[ytdl-gui] Finished downloading in {time.TotalSeconds} s"));
+			StartProcessHidden_Async(programArg);
 		}
-
 
 		private void BrowseFileButton_Click(object sender, RoutedEventArgs e)
 		{
-			OpenFileDialog dialog = new OpenFileDialog();
-			dialog.InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
+			OpenFileDialog dialog = new OpenFileDialog
+			{
+				InitialDirectory = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+			};
 			DialogResult result = dialog.ShowDialog();
 			if (result.ToString() == "OK")
 			{
-				SetFilenameAndDuration(dialog.FileName);
+				SetFileData(dialog.FileName);
 			}
 			
 		}
 
 		private void BrowseFolderButton_Click(object sender, RoutedEventArgs e)
 		{
-			FolderBrowserDialog folderDialog = new FolderBrowserDialog();
-			folderDialog.SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop);
-
+			FolderBrowserDialog folderDialog = new FolderBrowserDialog
+			{
+				SelectedPath = Environment.GetFolderPath(Environment.SpecialFolder.Desktop)
+			};
 			DialogResult result = folderDialog.ShowDialog();
 			if (result.ToString() == "OK")
 			{
@@ -83,22 +85,25 @@ namespace WpfApp1
 				string fileName = System.IO.Path.GetFileNameWithoutExtension(FileBox.Text);
 				var vol = VolumeSlider.Value.ToString().Replace(',', '.');
 				string fadecommand = "";
+				string MetadataOptions = "";
 				Double.TryParse(FadeOutBox.Text, NumberStyles.Number, CultureInfo.InvariantCulture, out double fadeoutoffset);
 				fadeoutoffset = - fadeoutoffset + FFProbeUtils.FromFormattedString(EndTimeBox.Text) - 1;
 				if (!(FadeInBox.Text == "")) fadecommand += $",afade=type=in:start_time={FFProbeUtils.FromFormattedString(StartTimeBox.Text)}:duration={FadeInBox.Text}";
 				if (!(FadeOutBox.Text == "")) fadecommand += $",afade=type=out:start_time=\"{fadeoutoffset.ToString().Replace(',', '.')}\":duration={FadeOutBox.Text}";
-				outputFolderOption = $" -i \"{FileBox.Text}\" -f mp3 -q:a {AudioQualitySlider.Value} -filter_complex \"[0:a]volume={vol}{fadecommand}[a]\" -ss {StartTimeBox.Text} -to {EndTimeBox.Text} -map \"[a]\" \"{PathBox.Text}\\{fileName}.mp3\"";
+				MetadataOptions += $" -metadata title=\"{TagTitle.Text}\"";
+				MetadataOptions += $" -metadata artist=\"{TagArtist.Text}\"";
+				MetadataOptions += $" -metadata album=\"{TagAlbum.Text}\"";
+				MetadataOptions += $" -metadata track=\"{TagTrackNumber.Text}\"";
+				if (!(OutFileName.Text == "")) fileName = OutFileName.Text;
+				outputFolderOption = $" -i \"{FileBox.Text}\" -f mp3 -q:a {AudioQualitySlider.Value} -filter_complex \"[0:a]volume={vol}{fadecommand}[a]\" -ss {StartTimeBox.Text} -to {EndTimeBox.Text} -map \"[a]\" {MetadataOptions} \"{PathBox.Text}\\{fileName}.mp3\"";
 			}
 			string programArg = "/c ffmpeg.exe ";
 			programArg += outputFolderOption;
-			StartProcessHidden(programArg, (time, output) => { 
-				ConsoleOutputCapture.Write($"[ytdl-gui] Finished converting in {time.TotalSeconds} s"); 
-				if(DeleteOriginalFile.IsChecked == true)
-				{
-					File.Delete(FileBox.Text);
-					ConsoleOutputCapture.Write($"[ytdl-gui] Deleted the original file at {FileBox.Text}");
-				}
-			});
+			StartProcessHidden(programArg);
+			if(DeleteOriginalFile.IsChecked == true)
+			{
+				File.Delete(FileBox.Text);
+			}
 		}
 
 		private void DisableButtonFor(System.Windows.Controls.Button button, int ms) 
@@ -116,19 +121,19 @@ namespace WpfApp1
 
 		private void UpdateButton_Click(object sender, RoutedEventArgs e)
 		{
-			string programArg = "/c youtube-dl.exe -U";
-			var process = Process.Start(CMD_EXE, programArg);
+			string programArg = "/C yt-dlp.exe -U";
+			StartProcessHidden(programArg);
 		}
 
 		private void RecentFileButton_Click(object sender, RoutedEventArgs e)
 		{
-			if (!String.IsNullOrEmpty(ConsoleOutputCapture.StoredOutput))
+			if (!String.IsNullOrEmpty(DownloadOut))
 			{
-				SetFilenameAndDuration(GetConvertedFilename(ConsoleOutputCapture.StoredOutput));
+				SetFileData(GetConvertedFilename(DownloadOut));
 			}
 		}
 
-		private void StartProcessHidden(string args, Action<TimeSpan, string> onFinishedCallback)
+		private async void StartProcessHidden_Async(string args)
 		{
 			Process process = new Process()
 			{
@@ -143,40 +148,78 @@ namespace WpfApp1
 					RedirectStandardError = true
 				}
 			};
-			process.OutputDataReceived += (a, b) =>
-			{
-				if (!String.IsNullOrWhiteSpace(b.Data)) ConsoleOutputCapture.Write(b.Data);
-			};
-			process.ErrorDataReceived += (a, b) =>
-			{
-				if (!String.IsNullOrWhiteSpace(b.Data)) ConsoleOutputCapture.Write(b.Data);
-			};
+			string stdout;
 			process.Start();
-			process.EnableRaisingEvents = true;
-			process.BeginErrorReadLine();
-			process.BeginOutputReadLine();
-			process.Exited += (obj, a) => this.Dispatcher.Invoke(() => {
-				onFinishedCallback.Invoke(process.ExitTime - process.StartTime, ConsoleOutputCapture.StoredOutput);
-			});
+			while ((stdout = await process.StandardOutput.ReadLineAsync()) != null) 
+			{
+				if (!String.IsNullOrWhiteSpace(stdout))
+				{
+					DownloadOut += stdout + "\n";
+				}
+			}
+			process.WaitForExit();
+			return;
 		}
 
 		private void StartProcessHidden(string args)
 		{
-			StartProcessHidden(args, (_, __) => { });
+			Process process = new Process();
+			{
+				process.StartInfo = new ProcessStartInfo()
+				{
+					FileName = CMD_EXE,
+					Arguments = args,
+					UseShellExecute = false,
+					WindowStyle = ProcessWindowStyle.Hidden,
+					CreateNoWindow = true,
+					RedirectStandardOutput = true,
+					RedirectStandardError = true
+				};
+			}
+			process.Start();
+			process.WaitForExit();
+			return;
 		}
 
 		private string GetConvertedFilename(string ytdlOutput)
 		{
 			string pattern = "Merging formats into \"(.*)\"\\n";
 			var extractedFilename = Regex.Match(ytdlOutput, pattern);
-			return extractedFilename.Groups[1].Value;
+			return extractedFilename.Groups[1].Value.Replace(@"\", "/");
 		}
 
-		private void SetFilenameAndDuration(string filename)
+		private bool ContainsKeyNested(JObject obj, string[] keys)
 		{
+			foreach (string key in keys)
+			{ 
+				if (!obj.ContainsKey(key))
+				{
+					return false;
+				}
+				try
+				{
+					obj = JObject.Parse(obj[key].ToString());
+				}
+				catch (JsonReaderException)
+				{
+					continue;
+				}
+				
+			}
+			return true;
+		}
+
+		private void SetFileData(string filename)
+		{
+			JObject FileInfo = FFProbeUtils.GetFileInfo(filename);
 			FileBox.Text = filename;
-			StartTimeBox.Text = FFProbeUtils.FormatDuration(0);
-			EndTimeBox.Text = FFProbeUtils.GetFormattedDuration(filename);
+			StartTimeBox.Text = TimeSpan.FromSeconds(0).ToString(@"hh\:mm\:ss\.fff");
+			EndTimeBox.Text = TimeSpan.FromSeconds(Convert.ToDouble(FileInfo["format"]["duration"])).ToString(@"hh\:mm\:ss\.fff");
+			OutFileName.Text = "";
+			if (ContainsKeyNested(FileInfo, new string[] { "format", "tags", "title" })) TagTitle.Text = FileInfo["format"]["tags"]["title"].ToString();
+			if (ContainsKeyNested(FileInfo, new string[] { "format", "tags", "artist" })) TagArtist.Text = FileInfo["format"]["tags"]["artist"].ToString();
+			if (ContainsKeyNested(FileInfo, new string[] { "format", "tags", "album" })) TagAlbum.Text = FileInfo["format"]["tags"]["album"].ToString();
+			if (ContainsKeyNested(FileInfo, new string[] { "format", "tags", "track" })) TagTrackNumber.Text = FileInfo["format"]["tags"]["track"].ToString();
 		}
 	}
 }

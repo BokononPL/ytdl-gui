@@ -4,21 +4,25 @@ using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
 
 namespace WpfApp1
 {
     public static class FFProbeUtils
     {
-		public static double GetDurationInSeconds(string fileName)
+		public static JObject GetFileInfo(string fileName)
 		{
-			string ffprobeFindDur = $"/c ffprobe.exe -i \"{fileName}\" -show_format | find \"duration\" ";
+			//string Cmd = $"/C ffprobe -v error -show_entries format=duration -of default=noprint_wrappers=1:nokey=1 \"{fileName}\" 2>&1 ";
+			string Cmd = $"/C ffprobe -v quiet -print_format json=compact=1 -show_format \"{fileName}\" 2>&1 ";
 			Process process = new Process()
 			{
 				StartInfo = new ProcessStartInfo()
 				{
-					FileName = Environment.ExpandEnvironmentVariables("%SystemRoot%") + @"\System32\cmd.exe",
-					Arguments = ffprobeFindDur,
+					FileName = "cmd.exe",
+					Arguments = Cmd,
 					UseShellExecute = false,
 					WindowStyle = ProcessWindowStyle.Hidden,
 					CreateNoWindow = true,
@@ -27,28 +31,14 @@ namespace WpfApp1
 				}
 			};
 			process.Start();
-			string output = process.StandardOutput.ReadToEnd();
-			string[] split = output.Trim().Split('=');
-			Double.TryParse(split[1], NumberStyles.Number, CultureInfo.InvariantCulture, out double result);
+			JObject fileinfo = JObject.Parse(process.StandardOutput.ReadToEnd());
 			process.WaitForExit();
-			return result;
-		}
-
-		public static string FormatDuration(double durationInS)
-		{
-			TimeSpan duration = TimeSpan.FromSeconds(durationInS);
-			return duration.ToString(@"hh\:mm\:ss\.fff");
-		}
-
-		public static string GetFormattedDuration(string filename)
-		{
-			return FormatDuration(GetDurationInSeconds(filename));
+			return fileinfo;
 		}
 
 		public static double FromFormattedString(string formatted)
 		{
-			TimeSpan.TryParse(formatted, out TimeSpan res);
-			return res.TotalSeconds;
+			return TimeSpan.ParseExact(formatted, @"hh\:mm\:ss\.fff", CultureInfo.InvariantCulture).TotalSeconds;
 		}
 	}
 }
